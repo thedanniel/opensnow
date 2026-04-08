@@ -38,20 +38,6 @@
     button:hover {
       background: #0056b3;
     }
-
-    #linkOutput {
-      display: none;
-      margin-top: 15px;
-      word-break: break-all;
-      font-size: 13px;
-      background: #f0f0f0;
-      padding: 10px;
-      border-radius: 5px;
-    }
-
-    #linkOutput a {
-      color: #007bff;
-    }
   </style>
 </head>
 <body>
@@ -72,11 +58,6 @@
   <input type="date" id="endDate">
 
   <button onclick="gerarLink()">Abrir no OpenSearch</button>
-
-  <div id="linkOutput">
-    <strong>Link gerado:</strong><br>
-    <a id="generatedLink" href="#" target="_blank">Clique aqui para abrir</a>
-  </div>
 </div>
 
 <script>
@@ -102,21 +83,18 @@ function gerarLink() {
 
   const _q = "(" +
     "filters:!(" +
-      "('$state':(store:appState),meta:(alias:!n,disabled:!f,index:b4bd6b80-55f3-11ed-9502-23ca8b926764,key:customer_id,negate:!f,params:(query:" + playerId + "),type:phrase),query:(match_phrase:(customer_id:" + playerId + ")))," +
+      "('$state':(store:appState),meta:(alias:!n,disabled:!f,index:b4bd6b80-55f3-11ed-9502-23ca8b926764,key:customer_id,negate:!f,params:(query:'" + playerId + "'),type:phrase),query:(match_phrase:(customer_id:'" + playerId + "')))," +
       "('$state':(store:appState),meta:(alias:!n,disabled:!f,index:b4bd6b80-55f3-11ed-9502-23ca8b926764,key:domain,negate:!f,params:(query:sportsbook),type:phrase),query:(match_phrase:(domain:sportsbook)))," +
       "('$state':(store:appState),meta:(alias:!n,disabled:!f,index:b4bd6b80-55f3-11ed-9502-23ca8b926764,key:metadata.ticket_code,negate:!f,params:(query:'" + ticketCode + "'),type:phrase),query:(match_phrase:(metadata.ticket_code:'" + ticketCode + "')))" +
     ")," +
     "query:(language:kuery,query:'')" +
   ")";
 
-  const fragment = "#?_a=" + _a + "&_g=" + _g + "&_q=" + _q;
+  const fragment = "#?_a=" + encodeURIComponent(_a) +
+                   "&_g=" + encodeURIComponent(_g) +
+                   "&_q=" + encodeURIComponent(_q);
 
-  // Set href on an invisible anchor and click it — this avoids window.open
-  // re-encoding characters in the hash fragment (single quotes, $, etc.)
-  const link = document.getElementById("generatedLink");
-  link.href = base + fragment;
-  document.getElementById("linkOutput").style.display = "block";
-  link.click();
+  window.open(base + fragment, "_blank");
 }
 </script>
 
